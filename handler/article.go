@@ -1,13 +1,12 @@
 package handler
 
 import (
-	"fmt"
 	"goLang-postArticle79/model"
 	"goLang-postArticle79/service"
+	"goLang-postArticle79/utils/validation"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 )
 
 type articleHandler struct {
@@ -21,11 +20,8 @@ func NewArticleHandler(articleService service.ArticleService) *articleHandler {
 func (handler *articleHandler) CreateArticle(c *gin.Context) {
 	var articleRequest model.ArticleRequest
 	if err := c.ShouldBindJSON(&articleRequest); err != nil {
-		errorMessages := []any{}
-		for _, e := range err.(validator.ValidationErrors) {
-			errorMessage := fmt.Sprintf("Error on %s, because: %s", e.Field(), e.ActualTag())
-			errorMessages = append(errorMessages, errorMessage)
-		}
+		errorMessages := validation.Message(err)
+
 		c.JSON(400, gin.H{
 			"success": false,
 			"message": "Validation error",
@@ -92,11 +88,8 @@ func (handler *articleHandler) UpdateArticle(c *gin.Context) {
 
 	var articleRequest model.ArticleRequest
 	if err := c.ShouldBindJSON(&articleRequest); err != nil {
-		errorMessages := []any{}
-		for _, e := range err.(validator.ValidationErrors) {
-			errorMessage := fmt.Sprintf("Error on %s, because: %s", e.Field(), e.ActualTag())
-			errorMessages = append(errorMessages, errorMessage)
-		}
+		errorMessages := validation.Message(err)
+
 		c.JSON(400, gin.H{
 			"success": false,
 			"message": "Validation error",

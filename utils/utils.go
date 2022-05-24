@@ -1,7 +1,7 @@
 package utils
 
-import "goLang-postArticle79/utils/validator"
+import "goLang-postArticle79/utils/validation"
 
 func Utils() {
-	validator.Validator()
+	validation.Validator()
 }
