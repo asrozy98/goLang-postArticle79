@@ -8,7 +8,7 @@ import (
 
 type ArticleRepository interface {
 	CreateArticle(article model.Articles) (model.Articles, error)
-	GetArticles(offset int, limit int) ([]model.Articles, error, int64)
+	GetArticles(offset int, limit int, status string) ([]model.Articles, error, int64)
 	GetArticle(ID int) (model.Articles, error)
 	UpdateArticle(article model.Articles) (model.Articles, error)
 	DeleteArticle(ID int) error
@@ -22,9 +22,13 @@ func NewArticleRepo(db *gorm.DB) *articleRepository {
 	return &articleRepository{db}
 }
 
-func (r *articleRepository) GetArticles(offset int, limit int) ([]model.Articles, error, int64) {
+func (r *articleRepository) GetArticles(offset int, limit int, status string) ([]model.Articles, error, int64) {
 	var articles []model.Articles
 	var count int64 = 0
+	if status != "" {
+		err := r.db.Where("status = ?", status).Offset(offset).Limit(limit).Find(&articles).Count(&count).Error
+		return articles, err, count
+	}
 	r.db.Model(&articles).Count(&count)
 	err := r.db.Limit(limit).Offset(offset).Find(&articles).Error
 	return articles, err, count

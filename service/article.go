@@ -8,7 +8,7 @@ import (
 
 type ArticleService interface {
 	CreateArticle(articleRequest model.ArticleRequest) (model.Articles, error)
-	GetArticles(offset int, limit int) ([]model.Articles, error, int64)
+	GetArticles(offset int, limit int, status string) ([]model.Articles, error, int64)
 	GetArticle(id int) (model.Articles, error)
 	UpdateArticle(id int, articleRequest model.ArticleRequest) (model.Articles, error)
 	DeleteArticle(id int) error
@@ -35,8 +35,8 @@ func (s *articleService) CreateArticle(articleRequest model.ArticleRequest) (mod
 	return newArticle, err
 }
 
-func (s *articleService) GetArticles(offset int, limit int) ([]model.Articles, error, int64) {
-	return s.articleRepository.GetArticles(offset, limit)
+func (s *articleService) GetArticles(offset int, limit int, status string) ([]model.Articles, error, int64) {
+	return s.articleRepository.GetArticles(offset, limit, status)
 }
 
 func (s *articleService) GetArticle(id int) (model.Articles, error) {

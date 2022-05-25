@@ -48,6 +48,7 @@ func (handler *articleHandler) CreateArticle(c *gin.Context) {
 }
 
 func (handler *articleHandler) GetArticles(c *gin.Context) {
+	statusString := c.Query("status")
 	pageString := c.Query("page")
 	page, _ := strconv.Atoi(pageString)
 	if page == 0 {
@@ -64,7 +65,7 @@ func (handler *articleHandler) GetArticles(c *gin.Context) {
 	}
 
 	offset := (page - 1) * limit
-	articles, err, total := handler.articleService.GetArticles(offset, limit)
+	articles, err, total := handler.articleService.GetArticles(offset, limit, statusString)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"success": false,
